@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <!-- https://geo.api.gouv.fr/communes?codePostal=<?= $POST["code"] ?> -->
+
+    <form onsubmit="return false" method="GET">
+
+        <label for="formCode">Code postal :</label>
+        <input id="code" type="number" name="code" value="">
+
+
+        <button id="button" type="submit">Rechercher</button>
+
+    </form>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+
+        /* (function () { */
+        var httpRequest;
+        document.getElementById("button").addEventListener('click', makeRequest);
+
+        function makeRequest() {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Abandon : Impossible de créer une instance de XMLHTTP');
+                return false;
+                alert()
+            }
+
+            let code = document.getElementById("code").value;
+            httpRequest.onreadystatechange = alertContents;
+            httpRequest.open('GET', 'https://geo.api.gouv.fr/communes?codePostal=' + code);
+            httpRequest.send();
+        }
+
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    let villes = JSON.parse(httpRequest.responseText);
+                    if (villes.length != 0) {
+                        alert (villes[0].nom);
+                    } else {
+                        alert ("pas de résultat");
+                    }
+                    alert(httpRequest.responseText);
+
+
+                }
+                else {
+                    alert("Il y a eu un problème dans la requête.");
+                }
+
+            }
+
+        }
+
+        /*  }) */
+
+    </script>
+
+</body>
+
+</html>
